@@ -69,7 +69,7 @@ https://github.com/Clesiaaa/Virtual-Machine-Intel8080.git
 cd kernel
 
 # Compile
-./compile.sh
+make
 
 # Run
 ./emulator
