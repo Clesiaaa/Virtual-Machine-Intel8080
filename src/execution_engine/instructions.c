@@ -1359,20 +1359,6 @@ uint8_t run(cpu *c)
                 }
             }
 
-            case 0xC2: // JNZ, addr
-            {
-                if ((c->f.flags >> 6) == 0){
-                    uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
-                    c->PC = addr;
-                    DEBUG_PRINT("0xC2 jnz addr\n");
-                    break;
-                }else{
-                    c->PC += 3;
-                    DEBUG_PRINT("0xC2 jnz addr\n");
-                    break;
-                }
-            }
-
             case 0xE2: //JPO, addr
             {
                 if ((c->f.flags >> 3) == 1){
@@ -1401,18 +1387,34 @@ uint8_t run(cpu *c)
                 }
             }
 
-            case 0xCA: //jz, addr
+            // JNZ (0xC2) - Jump if NOT Zero
+            case 0xC2:
             {
-                if ((c->f.flags >> 6) == 1){
-                    uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
+                uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
+                
+                if ((c->f.flags & (1 << 6)) == 0) {
                     c->PC = addr;
-                    DEBUG_PRINT("0xCA jz addr\n");
-                    break;
-                }else{
+                    DEBUG_PRINT("0xC2 jnz - jumping to 0x%04X\n", addr);
+                } else {
                     c->PC += 3;
-                    DEBUG_PRINT("0xCA jz addr\n");
-                    break;
+                    DEBUG_PRINT("0xC2 jnz - not jumping\n");
                 }
+                break;
+            }
+
+            // JZ (0xCA) - Jump if Zero
+            case 0xCA:
+            {
+                uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
+                
+                if ((c->f.flags & (1 << 6)) != 0) {  // ✅ Test UNIQUEMENT bit 6
+                    c->PC = addr;
+                    DEBUG_PRINT("0xCA jz - jumping to 0x%04X\n", addr);
+                } else {
+                    c->PC += 3;
+                    DEBUG_PRINT("0xCA jz - not jumping\n");
+                }
+                break;
             }
 
             case 0xDA: //jc, addr
@@ -1755,6 +1757,266 @@ uint8_t run(cpu *c)
                 DEBUG_PRINT("0xE9 PCHL: Jump to 0x%04X\n", c->PC);
                 break;
             }
+
+            // ===== INR (Increment Register) =====
+
+            case 0x04: // INR B
+                c->B++;
+                // Set flags
+                c->f.flags = (c->B == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));  // Z
+                c->f.flags = (c->B & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));  // S
+                c->f.flags = ((c->B & 0x0F) == 0) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));  // AC
+                // Parity
+                {
+                    uint8_t p = c->B;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x04 inr b\n");
+                break;
+
+            case 0x0C: // INR C
+                c->C++;
+                c->f.flags = (c->C == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->C & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->C & 0x0F) == 0) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->C;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x0C inr c\n");
+                break;
+
+            case 0x14: // INR D
+                c->D++;
+                c->f.flags = (c->D == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->D & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->D & 0x0F) == 0) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->D;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x14 inr d\n");
+                break;
+
+            case 0x1C: // INR E
+                c->E++;
+                c->f.flags = (c->E == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->E & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->E & 0x0F) == 0) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->E;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x1C inr e\n");
+                break;
+
+            case 0x24: // INR H
+                c->H++;
+                c->f.flags = (c->H == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->H & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->H & 0x0F) == 0) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->H;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x24 inr h\n");
+                break;
+
+            case 0x2C: // INR L
+                c->L++;
+                c->f.flags = (c->L == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->L & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->L & 0x0F) == 0) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->L;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x2C inr l\n");
+                break;
+
+            case 0x3C: // INR A
+                c->A++;
+                c->f.flags = (c->A == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->A & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->A & 0x0F) == 0) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->A;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x3C inr a\n");
+                break;
+
+            // ===== DCR (Decrement Register) =====
+
+            case 0x05: // DCR B
+                c->B--;
+                // Set flags  
+                c->f.flags = (c->B == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));  // Z
+                c->f.flags = (c->B & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));  // S
+                c->f.flags = ((c->B & 0x0F) == 0x0F) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));  // AC
+                // Parity
+                {
+                    uint8_t p = c->B;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x05 dcr b\n");
+                break;
+
+            case 0x0D: // DCR C
+                c->C--;
+                c->f.flags = (c->C == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->C & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->C & 0x0F) == 0x0F) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->C;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x0D dcr c\n");
+                break;
+
+            case 0x15: // DCR D
+                c->D--;
+                c->f.flags = (c->D == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->D & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->D & 0x0F) == 0x0F) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->D;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x15 dcr d\n");
+                break;
+
+            case 0x1D: // DCR E
+                c->E--;
+                c->f.flags = (c->E == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->E & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->E & 0x0F) == 0x0F) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->E;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x1D dcr e\n");
+                break;
+
+            case 0x25: // DCR H
+                c->H--;
+                c->f.flags = (c->H == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->H & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->H & 0x0F) == 0x0F) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->H;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x25 dcr h\n");
+                break;
+
+            case 0x2D: // DCR L
+                c->L--;
+                c->f.flags = (c->L == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->L & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->L & 0x0F) == 0x0F) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->L;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x2D dcr l\n");
+                break;
+
+            case 0x3D: // DCR A
+                c->A--;
+                c->f.flags = (c->A == 0) ? (c->f.flags | (1 << 6)) : (c->f.flags & ~(1 << 6));
+                c->f.flags = (c->A & 0x80) ? (c->f.flags | (1 << 7)) : (c->f.flags & ~(1 << 7));
+                c->f.flags = ((c->A & 0x0F) == 0x0F) ? (c->f.flags | (1 << 4)) : (c->f.flags & ~(1 << 4));
+                {
+                    uint8_t p = c->A;
+                    uint8_t count = 0;
+                    for (int i = 0; i < 8; i++) {
+                        if (p & 1) count++;
+                        p >>= 1;
+                    }
+                    c->f.flags = (count % 2 == 0) ? (c->f.flags | (1 << 2)) : (c->f.flags & ~(1 << 2));
+                }
+                c->PC++;
+                DEBUG_PRINT("0x3D dcr a\n");
+                break;
 
             default: c->PC++; break;
         }

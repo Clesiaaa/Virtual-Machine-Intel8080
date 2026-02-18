@@ -66,7 +66,7 @@ xcode-select --install
 ```bash
 # Clone the repository
 https://github.com/Clesiaaa/Virtual-Machine-Intel8080.git
-cd kernel
+cd Virtual-Machine-Intel8080
 
 # Compile
 make
@@ -99,10 +99,8 @@ root/examples> ls
 Directory: root/examples
 ================================================
   [FILE] hello.asm                       567 B
-  [FILE] factorial.asm                   423 B
-  [FILE] sum.asm                         389 B
 ================================================
-  3 item(s)
+  1 item(s)
 ```
 
 ### 3. Compile and Run
@@ -236,26 +234,6 @@ OUT 1
 HLT
 ```
 
-### Example: Sum 0 to 10
-
-```assembly
-; Sum of 0 to 10
-MVI A, 0     ; Sum = 0
-MVI B, 0     ; Counter = 0
-LOOP:
-ADD B        ; Sum += Counter
-INR B        ; Counter++
-MOV C, B
-MVI D, 11
-CMP D        ; Compare with 11
-JNZ LOOP
-ADI 48       ; Convert to ASCII
-OUT 1
-MVI A, 10
-OUT 1
-HLT
-```
-
 ### Supported Instructions
 
 #### Data Transfer
@@ -290,8 +268,7 @@ The emulator maintains a persistent virtual filesystem stored in `.emulator_fs.d
 ```
 root/
 └── examples/
-    ├── hello.asm       - Hello World program
-    └── sum.asm         - Sum from 0 to 10
+    └── hello.asm       - Hello World program
 ```
 
 ### Creating a Project
@@ -425,14 +402,6 @@ file: hello.hex
 HELLO WORLD
 ```
 
-### Test Factorial
-
-```bash
-root/examples> exec
-file: factorial.hex
-24
-```
-
 ### Test Sum
 
 ```bash
@@ -512,7 +481,7 @@ MIT License - see LICENSE file for details
 
 **Issues**: Please report bugs on GitHub
 
-**Mail**: robert.folga@outlook.com
+**Mail**: robert.folga@ens.uvsq.fr
 
 ---
 
