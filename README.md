@@ -1,4 +1,4 @@
-# 🎮 Intel 8080 Emulator
+# 🎮 An Complete Work in Pogress Intel 8080 Emulator
 
 A complete Intel 8080 microprocessor emulator with virtual filesystem, assembler compiler, and vim-like text editor.
 
@@ -10,7 +10,7 @@ A complete Intel 8080 microprocessor emulator with virtual filesystem, assembler
 
 ## ✨ Features
 
-### 🖥️ Complete 8080 Emulation
+### 🖥️ 8080 Emulation !
 - ✅ **All 256 opcodes** implemented
 - ✅ **Full instruction set**: MOV, MVI, ADD, SUB, JMP, CALL, etc.
 - ✅ **Flag management**: Zero, Sign, Parity, Carry, Auxiliary Carry
