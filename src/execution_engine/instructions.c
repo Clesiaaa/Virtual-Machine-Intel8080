@@ -1361,7 +1361,7 @@ uint8_t run(cpu *c)
 
             case 0xE2: //JPO, addr
             {
-                if ((c->f.flags >> 3) == 1){
+                if ((c->f.flags & (1 << 3)) != 0){
                     uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
                     c->PC = addr;
                     DEBUG_PRINT("0xE2 jpo addr\n");
@@ -1375,7 +1375,7 @@ uint8_t run(cpu *c)
 
             case 0xF2: //jp, adrr
             {
-                if ((c->f.flags >> 7) == 1){
+                if ((c->f.flags & (1 << 7)) != 0){
                     uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
                     c->PC = addr;
                     DEBUG_PRINT("0xF2 jc addr\n");
@@ -1407,7 +1407,7 @@ uint8_t run(cpu *c)
             {
                 uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
                 
-                if ((c->f.flags & (1 << 6)) != 0) {  // ✅ Test UNIQUEMENT bit 6
+                if ((c->f.flags & (1 << 6)) != 0) {
                     c->PC = addr;
                     DEBUG_PRINT("0xCA jz - jumping to 0x%04X\n", addr);
                 } else {
@@ -1419,7 +1419,7 @@ uint8_t run(cpu *c)
 
             case 0xDA: //jc, addr
             {
-                if ((c->f.flags >> 0) == 1){
+                if ((c->f.flags & (1 << 0)) != 0){
                     uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
                     c->PC = addr;
                     DEBUG_PRINT("0xDA jc addr\n");
@@ -1433,7 +1433,7 @@ uint8_t run(cpu *c)
 
             case 0xEA: //jpe, addr
             {
-                if ((c->f.flags >> 3) == 0){
+                if ((c->f.flags & (1 << 7)) == 0){
                     uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
                     c->PC = addr;
                     DEBUG_PRINT("0xEA jpe addr\n");
@@ -1447,7 +1447,7 @@ uint8_t run(cpu *c)
 
             case 0xFA: //jm, addr
             {
-                if ((c->f.flags >> 7) == 0){
+                if ((c->f.flags & (1 << 7)) == 0){
                     uint16_t addr = (c->memory[c->PC + 1]) | (c->memory[c->PC + 2] << 8);
                     c->PC = addr;
                     DEBUG_PRINT("0xFA jm addr\n");
