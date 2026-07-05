@@ -1,6 +1,6 @@
-# 🎮 An Complete Work in Pogress Intel 8080 Emulator
+# Intel 8080 Emulator (Work in Progress)
 
-A complete Intel 8080 microprocessor emulator with virtual filesystem, assembler compiler, and vim-like text editor.
+A complete Intel 8080 microprocessor emulator with a virtual filesystem, an assembler, and a vim-like text editor.
 
 ![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -8,49 +8,49 @@ A complete Intel 8080 microprocessor emulator with virtual filesystem, assembler
 
 ---
 
-## ✨ Features
+## Features
 
-### 🖥️ 8080 Emulation !
-- ✅ **All 256 opcodes** implemented
-- ✅ **Full instruction set**: MOV, MVI, ADD, SUB, JMP, CALL, etc.
-- ✅ **Flag management**: Zero, Sign, Parity, Carry, Auxiliary Carry
-- ✅ **64KB addressable memory**
-- ✅ **Accurate cycle timing** for each instruction
-- ✅ **Stack operations** with SP register
-- ✅ **I/O ports**: IN and OUT instructions
-- ✅ **Interrupt support**: EI, DI, RST
+### 8080 Emulation
+- All 256 opcodes implemented
+- Full instruction set: MOV, MVI, ADD, SUB, JMP, CALL, etc.
+- Flag management: Zero, Sign, Parity, Carry, Auxiliary Carry
+- 64KB addressable memory
+- Accurate cycle timing for each instruction
+- Stack operations with SP register
+- I/O ports: IN and OUT instructions
+- Interrupt support: EI, DI, RST
 
-### 📁 Virtual Filesystem
-- ✅ **Persistent storage** - files survive between sessions
-- ✅ **Directory hierarchy** - organize your projects
-- ✅ **Unix-like commands**: ls, cd, mkdir, touch, del
-- ✅ **Import from host** - bring files into the emulator
-- ✅ **Dynamic prompt** showing current directory
+### Virtual Filesystem
+- Persistent storage — files survive between sessions
+- Directory hierarchy for organizing projects
+- Unix-like commands: ls, cd, mkdir, touch, del
+- Import files from the host system
+- Dynamic prompt showing the current directory
 
-### ✍️ Built-in Text Editor
-- ✅ **Vim-like interface** with familiar commands
-- ✅ **Save** with `:w`
-- ✅ **Quit** with `:q`
-- ✅ **Save and quit** with `:wq`
-- ✅ **Line editing**: append and delete
-- ✅ **Integrated** with the filesystem
+### Built-in Text Editor
+- Vim-like interface with familiar commands
+- Save with `:w`
+- Quit with `:q`
+- Save and quit with `:wq`
+- Line editing: append and delete
+- Integrated with the filesystem
 
-### 🔧 Assembler Compiler
-- ✅ **Full 8080 assembly** support
-- ✅ **All mnemonics**: 74 instruction types
-- ✅ **Multiple formats**: decimal, hexadecimal, octal
-- ✅ **Comments** support with `;`
-- ✅ **Direct compilation** from filesystem
+### Assembler
+- Full 8080 assembly support
+- All mnemonics: 74 instruction types
+- Multiple numeric formats: decimal, hexadecimal, octal
+- Comment support with `;`
+- Direct compilation from the filesystem
 
-### 📚 Example Programs
-- ✅ **Hello World** - classic first program
-- ✅ **Factorial** - calculate factorial of 4
-- ✅ **Sum** - compute sum from 0 to 10
-- ✅ Pre-loaded in `/root/examples`
+### Example Programs
+- Hello World — classic first program
+- Factorial — calculates the factorial of 4
+- Sum — computes the sum from 0 to 10
+- Preloaded in `/root/examples`
 
 ---
 
-## 📦 Installation
+## Installation
 
 ### Prerequisites
 
@@ -60,12 +60,13 @@ sudo apt-get install build-essential
 
 # macOS
 xcode-select --install
+```
 
 ### Build
 
 ```bash
 # Clone the repository
-https://github.com/Clesiaaa/Virtual-Machine-Intel8080.git
+git clone https://github.com/Clesiaaa/Virtual-Machine-Intel8080.git
 cd Virtual-Machine-Intel8080
 
 # Compile
@@ -77,7 +78,7 @@ make
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. First Launch
 
@@ -87,7 +88,7 @@ $ ./emulator
 booting....
 Filesystem initialized
 
-root> 
+root>
 ```
 
 ### 2. Explore Examples
@@ -119,7 +120,7 @@ HELLO WORLD
 
 ---
 
-## 📖 Command Reference
+## Command Reference
 
 ### System Commands
 
@@ -154,7 +155,7 @@ HELLO WORLD
 
 ---
 
-## ✍️ Using the Editor
+## Using the Editor
 
 The emulator includes a vim-like text editor.
 
@@ -205,12 +206,12 @@ File saved
 
 ---
 
-## 📝 Assembly Language
+## Assembly Language
 
 ### Syntax
 
 ```assembly
-; Comments start with semicolon
+; Comments start with a semicolon
 LABEL:
     INSTRUCTION OPERAND1, OPERAND2
 ```
@@ -236,30 +237,30 @@ HLT
 
 ### Supported Instructions
 
-#### Data Transfer
-- `MOV`, `MVI`, `LXI`, `LDA`, `STA`, `LHLD`, `SHLD`, `LDAX`, `STAX`
+**Data Transfer**
+`MOV`, `MVI`, `LXI`, `LDA`, `STA`, `LHLD`, `SHLD`, `LDAX`, `STAX`
 
-#### Arithmetic
-- `ADD`, `ADC`, `SUB`, `SBB`, `INR`, `DCR`, `INX`, `DCX`, `DAD`
+**Arithmetic**
+`ADD`, `ADC`, `SUB`, `SBB`, `INR`, `DCR`, `INX`, `DCX`, `DAD`
 
-#### Logical
-- `ANA`, `XRA`, `ORA`, `CMP`, `ANI`, `XRI`, `ORI`, `CPI`
+**Logical**
+`ANA`, `XRA`, `ORA`, `CMP`, `ANI`, `XRI`, `ORI`, `CPI`
 
-#### Branch
-- `JMP`, `JZ`, `JNZ`, `JC`, `JNC`, `JP`, `JM`, `JPE`, `JPO`
+**Branch**
+`JMP`, `JZ`, `JNZ`, `JC`, `JNC`, `JP`, `JM`, `JPE`, `JPO`
 
-#### Stack
-- `PUSH`, `POP`, `XTHL`, `SPHL`
+**Stack**
+`PUSH`, `POP`, `XTHL`, `SPHL`
 
-#### I/O
-- `IN`, `OUT`
+**I/O**
+`IN`, `OUT`
 
-#### Control
-- `HLT`, `NOP`, `EI`, `DI`, `RST`
+**Control**
+`HLT`, `NOP`, `EI`, `DI`, `RST`
 
 ---
 
-## 🗂️ Filesystem Structure
+## Filesystem Structure
 
 The emulator maintains a persistent virtual filesystem stored in `.emulator_fs.dat`.
 
@@ -285,7 +286,7 @@ root/myproject/src> editor main.asm
 
 ---
 
-## 📥 Importing Files
+## Importing Files
 
 You can import assembly files from your host system:
 
@@ -296,11 +297,11 @@ name in filesystem: test.asm
 Imported 'test.asm' from host
 ```
 
-The file is now available in the virtual filesystem and persists between sessions.
+The file is then available in the virtual filesystem and persists between sessions.
 
 ---
 
-## 🔄 Workflow Example
+## Workflow Example
 
 ### Complete Development Cycle
 
@@ -334,7 +335,7 @@ ROM loaded: 15 bytes
 
 ---
 
-## 🎯 Architecture
+## Architecture
 
 ### CPU Structure
 
@@ -374,7 +375,7 @@ For Space Invaders compatibility:
 
 ---
 
-## 🛠️ Development
+## Development
 
 ### Adding New Features
 
@@ -387,7 +388,7 @@ To add a new instruction:
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Test Hello World
 
@@ -412,16 +413,16 @@ file: sum.hex
 
 ---
 
-## 📊 Performance
+## Performance
 
 On a modern Intel i7:
-- **Emulation speed**: ~50-100 MHz (25-50x faster than real 8080)
-- **Instruction overhead**: ~20 nanoseconds
-- **Memory usage**: ~100KB (64KB RAM + structures)
+- Emulation speed: ~50-100 MHz (25-50x faster than a real 8080)
+- Instruction overhead: ~20 nanoseconds
+- Memory usage: ~100KB (64KB RAM + structures)
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Filesystem Won't Load
 
@@ -444,14 +445,14 @@ Check your assembly syntax:
 
 Verify:
 1. File exists: `ls`
-2. File is .hex format: `cat filename.hex`
-3. ROM is loaded: Check for "ROM loaded" message
+2. File is in `.hex` format: `cat filename.hex`
+3. ROM is loaded: check for the "ROM loaded" message
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please:
+Contributions are welcome. Please:
 
 1. Fork the repository
 2. Create a feature branch
@@ -461,13 +462,13 @@ Contributions are welcome! Please:
 
 ---
 
-## 📜 License
+## License
 
-MIT License - see LICENSE file for details
+MIT License — see LICENSE file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Intel for the 8080 processor
 - The retro computing community
@@ -475,7 +476,7 @@ MIT License - see LICENSE file for details
 
 ---
 
-## 📞 Contact
+## Contact
 
 **Author**: Robert Folga
 
@@ -485,7 +486,7 @@ MIT License - see LICENSE file for details
 
 ---
 
-## 🎓 Resources
+## Resources
 
 ### Documentation
 - [Intel 8080 Datasheet](http://www.nj7p.org/Manuals/PDFs/Intel/9800301D_8080_8080A_Instruction_Set.pdf)
@@ -494,13 +495,3 @@ MIT License - see LICENSE file for details
 
 ### Similar Projects
 - [8080 Online Assembler](http://www.asm80.com/)
-
----
-
-## ⭐ Star History
-
-If you find this project useful, please consider giving it a star on GitHub!
-
----
-
-**Happy Emulating! 🎮🚀**
